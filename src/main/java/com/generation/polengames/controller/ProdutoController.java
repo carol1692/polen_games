@@ -21,7 +21,8 @@ import com.generation.polengames.model.Produto;
 import com.generation.polengames.repository.CategoriaRepository;
 import com.generation.polengames.repository.ProdutoRepository;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import org.springframework.web.bind.annotation.RequestBody;
+
 import jakarta.validation.Valid;
 
 @RestController
@@ -53,12 +54,16 @@ public class ProdutoController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Produto> post(@Valid @RequestBody Produto produto){
-		if(categoriaRepository.existsById(produto.getCategoria().getId())) {
-			produto.setId(null);
-			return ResponseEntity.status(HttpStatus.CREATED).body(produtoRepository.save(produto));
-		}
-		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O tema não existe!", null);
+	public ResponseEntity<Produto> post(
+        @Valid 
+        @RequestBody Produto produto
+	){
+    if (categoriaRepository.existsById(produto.getCategoria().getId())) {
+        produto.setId(null);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                             .body(produtoRepository.save(produto));
+    }
+    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A categoria não existe!");
 	}
 	
 	@PutMapping
